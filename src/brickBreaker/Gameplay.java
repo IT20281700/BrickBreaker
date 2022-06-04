@@ -1,6 +1,7 @@
 package brickBreaker;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -13,6 +14,11 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class Gameplay extends JPanel implements KeyListener, ActionListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private boolean play = false;
 	private int score = 0;
 
@@ -56,6 +62,11 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
 		g.fillRect(0, 0, 3, 592);
 		g.fillRect(0, 0, 692, 3);
 		g.fillRect(691, 0, 3, 592);
+		
+		// score
+		g.setColor(Color.white);
+		g.setFont(new Font("serif", Font.BOLD, 25));
+		g.drawString("SCORE "+score, 570, 30);
 
 		// paddle
 		g.setColor(Color.green);
@@ -64,6 +75,29 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
 		// ball
 		g.setColor(Color.yellow);
 		g.fillOval(ballposX, ballposY, 20, 20);
+		
+		if(totalBricks <= 0) {
+			play = false;
+			ballXdir = 0;
+			ballYdir = 0;
+			g.setColor(Color.green);
+			g.setFont(new Font("serif", Font.BOLD, 30));
+			g.drawString("You Won", 300, 250);
+			g.drawString("Scores: "+score, 295, 300);
+			g.drawString("Press Enter to Restart", 215, 350);
+		}
+		
+		if(ballposY > 570) {
+			play = false;
+			ballXdir = 0;
+			ballYdir = 0;
+			g.setColor(Color.red);
+			g.setFont(new Font("serif", Font.BOLD, 30));
+			g.drawString("Game Over", 290, 250);
+			g.drawString("Scores: "+score, 295, 300);
+			g.drawString("Press Enter to Restart", 215, 350);
+		}
+		
 		g.dispose();
 	}
 
@@ -151,6 +185,22 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
 				playerX = 10;
 			} else {
 				moveLeft();
+			}
+		}
+		
+		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+			if(!play) {
+				play = true;
+				ballposX = 120;
+				ballposY = 350;
+				ballXdir = -2;
+				ballYdir = -4;
+				playerX = 310;
+				score = 0;
+				totalBricks = 21;
+				map = new MapGenertor(3, 7);
+				
+				repaint();
 			}
 		}
 
